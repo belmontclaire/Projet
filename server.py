@@ -12,7 +12,7 @@ app = Flask(__name__)
 
 loaded_model = pickle.load(open("https://github.com/belmontclaire/Test/blob/main/finalized_model.sav?raw=true", 'rb'))
 
-df = pd.read_csv("/Users/belmontclaire/Documents/Projet7/DataTestSample.csv", header = 0)
+df = pd.read_csv("https://raw.githubusercontent.com/belmontclaire/Test/main/DataTestSample.csv", header = 0)
 
 @app.route('/api/<int:id_client>')
 def credit(id_client):
