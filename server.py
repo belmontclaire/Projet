@@ -10,7 +10,7 @@ import numpy as np
 #from Model import ClientModel, Client
 app = Flask(__name__)
 
-loaded_model = pickle.load(open("/Users/belmontclaire/Documents/Projet7/finalized_model.sav", 'rb'))
+loaded_model = pickle.load(open("https://github.com/belmontclaire/Test/blob/main/finalized_model.sav?raw=true", 'rb'))
 
 df = pd.read_csv("/Users/belmontclaire/Documents/Projet7/DataTestSample.csv", header = 0)
 
