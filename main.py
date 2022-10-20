@@ -23,12 +23,12 @@ st.set_page_config(
 
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
-image = Image.open('/Users/belmontclaire/Documents/Projet7/shap.png')
+image = Image.open('https://raw.githubusercontent.com/belmontclaire/Test/main/shap.png')
 
 @st.cache  # No need for TTL this time. It's static data :)
 def get_data():
 	return pd.read_csv(
-            "/Users/belmontclaire/Documents/Projet7/DataTestSample.csv", header = 0
+            "https://raw.githubusercontent.com/belmontclaire/Test/main/DataTestSample.csv", header = 0
             )
 @st.cache(allow_output_mutation=True)
 def get_model():
