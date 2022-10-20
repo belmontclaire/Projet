@@ -6,10 +6,14 @@ import numpy as np
 import streamlit as st
 import pandas as pd
 import requests
+import json
 import pickle
 import lime
 from lime import lime_tabular
-import shap
+from PIL import Image
+from urllib.request import urlopen
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 
 st.set_page_config(
     page_title="Credit",
@@ -19,48 +23,50 @@ st.set_page_config(
 
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
-df = pd.read_csv(
-    "/Users/belmontclaire/Documents/TestProjet7/DataTest.csv", header = 0
-)
+image = Image.open('/Users/belmontclaire/Documents/Projet7/shap.png')
+
+@st.cache  # No need for TTL this time. It's static data :)
+def get_data():
+	return pd.read_csv(
+            "/Users/belmontclaire/Documents/Projet7/DataTestSample.csv", header = 0
+            )
+@st.cache(allow_output_mutation=True)
+def get_model():
+    return pickle.load(open("/Users/belmontclaire/Documents/Projet7/finalized_model.sav", 'rb'))
+
+df = get_data()
 X_full = df.drop(["TARGET","index","SK_ID_CURR"],axis=1)
 X_value  = df.drop(["TARGET","index","SK_ID_CURR"],axis=1).values
-filename ="/Users/belmontclaire/Documents/TestProjet7/finalized_model.sav"
-loaded_model = pickle.load(open(filename, 'rb'))
-explainer = shap.TreeExplainer(loaded_model)
-shap_values = explainer.shap_values(X_full)
+loaded_model = get_model()
+explainer = lime_tabular.LimeTabularExplainer(X_value, mode='classification', 
+     feature_names= X_full.columns)
+predict_fn_rf = lambda x: loaded_model.predict_proba(x).astype(float)
+
 
 # dashboard title
 st.title("Probabilité d'avoir un crédit")
 
 # top-level filters
-client_filter = st.selectbox("Sélectionner votre ID dans cette liste déroulante :", pd.unique(df["SK_ID_CURR"]))
+
+client_filter = st.sidebar.selectbox("Sélectionner votre ID dans cette liste déroulante :", pd.unique(df["SK_ID_CURR"].sort_values()))
 
 # creating a single-element container
 placeholder = st.empty()
 
 # dataframe filter
-data = df[df["SK_ID_CURR"] == client_filter]
 
-# fonction display shap
-#def st_shap(plot, height=None):
-#    shap_html = f"<head>{shap.getjs()}</head><body>{plot.html()}</body>"
-#    components.html(shap_html, height=height)
+API_url = "http://127.0.0.1:5000/api/" + str(client_filter)
 
-# labels
-#labels = requests.get("http://localhost:5000/api/labels").json()
-#selector = st.selectbox("Sélectionner votre ID dans cette liste déroulante :", labels)
+json_url = urlopen(API_url)
 
-# load data
-#data = pd.read_json(
-#    requests.get("http://localhost:5000/api/data").json()
-#)
-X = data.drop(["TARGET","index","SK_ID_CURR"],axis=1)
-y = loaded_model.predict(X)
-if y == 0:
-    y_value = "OUI"
+API_data = json.loads(json_url.read())
+classe_predite = API_data['prediction']
+if classe_predite == 1:
+    y_value = 'NON'
 else:
-    y_value = "NON"
-proba = loaded_model.predict_proba(X)[:,0]
+    y_value = 'OUI'
+proba = API_data['proba'] 
+
 
 with placeholder.container():
 
@@ -78,24 +84,44 @@ with placeholder.container():
     )
 
     # feature imprtance local
-    #idx = df.index[df["SK_ID_CURR"] == client_filter]
-    #explainer = lime_tabular.LimeTabularExplainer(X_value, mode='classification', 
-    #   feature_names= X_full.columns)
-    #predict_fn_rf = lambda x: loaded_model.predict_proba(x).astype(float)
-    #explanation = explainer.explain_instance(X_value[idx[0]], predict_fn_rf, 
-    #   num_features=10)
-    #st.markdown("### Feature importance locale")
-    #res = explanation.show_in_notebook(show_all=False)
-    #st.markdown(res, unsafe_allow_html=True)
-    #st.pyplot(explanation.show_in_notebook(show_all=False))
+    with st.spinner('Attente de la feature importance local ...'):
+        idx = df.index[df["SK_ID_CURR"] == client_filter]
+        explanation = explainer.explain_instance(X_value[idx[0]], predict_fn_rf, 
+           num_features=10)
+        st.markdown("### Feature importance locale")
+        explanation.as_pyplot_figure()
+        st.pyplot()
+        st.markdown(explanation, unsafe_allow_html=True)
+        st.write('Les variables avec des barres verte montrent que ces variables induisent que le client soit dans la classe 1 tandis que les variables avec des barres rouges induisent le contraire.')
     
     # feature importance glocal
     st.markdown("### Feature importance globale")
-    st.pyplot(shap.summary_plot(shap_values, X_full, max_display = 10))
-    
-    # Select feature
-    feature_filter = st.selectbox("Sélectionner une variable dans cette liste déroulante :", pd.unique(df.columns))
-    st.markdown("### Histogramme de la variable choisi")
-    fig = px.histogram(df, x=feature_filter)
-    st.plotly_chart(fig)
+    st.image(image)
+    st.write('Voici les 10 features qui influencent le plus la prédiction')
 
+    # Select feature
+    st.markdown("### Graphique d’analyse bi-variée entre les deux features sélectionnées")
+    feature1 = st.selectbox("Sélectionner une variable dans cette liste déroulante :", pd.unique(df.drop(["TARGET"],axis=1).select_dtypes(include=[np.float64]).columns))
+    feature2 = st.selectbox("Sélectionner une deuxième variable dans cette liste déroulante :", pd.unique(df.drop(["TARGET"],axis=1).select_dtypes(include=[np.float64]).columns))
+    fig = go.Figure()
+
+    fig.add_trace(go.Scatter(x=df[feature1][df.CODE_GENDER==0],
+                             y=df[feature2][df.CODE_GENDER==0],
+                             mode='markers',
+                             marker=dict(color='rgba(0, 255, 0, 0.5)',opacity = 0.15),
+                             name='Client pouvant prendre un crédit'))
+    fig.add_trace(go.Scatter(x=df[feature1][df.CODE_GENDER==1],
+                             y=df[feature2][df.CODE_GENDER==1],
+                             mode='markers',
+                             marker=dict(color='rgba(255, 0, 0, 0.5)',opacity = 0.15),
+                             name='Client ne pouvant pas prendre un crédit'))
+    fig.add_trace(go.Scatter(name="Valeur de l'id choisie",x=df[feature1][df["SK_ID_CURR"] == client_filter], y=df[feature2][df["SK_ID_CURR"] == client_filter],
+                             mode = 'markers',
+                             marker=dict(
+                                        color="blue",
+                                        size=15,
+                                        )
+                             )
+                  )
+
+    st.plotly_chart(fig)
