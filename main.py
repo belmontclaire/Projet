@@ -55,33 +55,33 @@ placeholder = st.empty()
 
 # dataframe filter
 
-#API_url = "http://10.0.2.2:8080/api/" + str(client_filter)
+API_url = "http://10.0.2.2:8080/api/" + str(client_filter)
 
-#json_url = urlopen(API_url)
+json_url = urlopen(API_url)
 
-#API_data = json.loads(json_url.read())
-#classe_predite = API_data['prediction']
-#if classe_predite == 1:
-#    y_value = 'NON'
-#else:
-#    y_value = 'OUI'
-#proba = API_data['proba'] 
+API_data = json.loads(json_url.read())
+classe_predite = API_data['prediction']
+if classe_predite == 1:
+    y_value = 'NON'
+else:
+    y_value = 'OUI'
+proba = API_data['proba'] 
 
 
 with placeholder.container():
 
     # create three columns
-    #kpi1, kpi2 = st.columns(2)
+    kpi1, kpi2 = st.columns(2)
 
     # fill in those three columns with respective metrics or KPIs
-    #kpi1.metric(
-    #    label="Est-ce que le crédit est accepté ?",
-    #    value=y_value,
-    #)
-    #kpi2.metric(
-    #    label="La probabilité d'avoir un crédit :",
-    #    value=np.round(proba,2), # TODO Donner la proba d'avoir le crédit surment grace au modèle
-    #)
+    kpi1.metric(
+        label="Est-ce que le crédit est accepté ?",
+        value=y_value,
+    )
+    kpi2.metric(
+        label="La probabilité d'avoir un crédit :",
+        value=np.round(proba,2), 
+    )
 
     # feature imprtance local
     with st.spinner('Attente de la feature importance local ...'):
