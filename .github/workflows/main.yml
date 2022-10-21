@@ -12,6 +12,6 @@ jobs:
       - uses: actions/checkout@v2
       - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
         with:
-          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_api_key: ${{secrets.fc2ade7f-2c72-4da4-9c87-ff8de85434be}}
           heroku_app_name: "credit-predict-102022" #Must be unique in Heroku
           heroku_email: "belmont.bis@gmail.com"
