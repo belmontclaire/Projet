@@ -11,7 +11,7 @@ import uvicorn
 #from waitress import serve
 app = Flask(__name__)
 
-loaded_model = pickle.load(open("https://github.com/belmontclaire/Test/blob/main/finalized_model.sav?raw=true", 'rb'))
+loaded_model = pickle.load(open("finalized_model.sav", 'rb'))
 
 df = pd.read_csv("https://raw.githubusercontent.com/belmontclaire/Test/main/DataTestSample.csv", header = 0)
 
