@@ -23,7 +23,7 @@ st.set_page_config(
 
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
-image = Image.open('https://raw.githubusercontent.com/belmontclaire/Test/main/shap.png')
+image = Image.open('shap.png')
 
 @st.cache  # No need for TTL this time. It's static data :)
 def get_data():
