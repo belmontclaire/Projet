@@ -32,7 +32,7 @@ def get_data():
             )
 @st.cache(allow_output_mutation=True)
 def get_model():
-    return pickle.load(open("https://github.com/belmontclaire/Test/blob/main/finalized_model.sav?raw=true", 'rb'))
+    return pickle.load(open("finalized_model.sav", 'rb'))
 
 df = get_data()
 X_full = df.drop(["TARGET","index","SK_ID_CURR"],axis=1)
