@@ -7,7 +7,7 @@ import shap
 import pickle
 import pandas as pd
 import numpy as np
-#from Model import ClientModel, Client
+import uvicorn
 app = Flask(__name__)
 
 loaded_model = pickle.load(open("https://github.com/belmontclaire/Test/blob/main/finalized_model.sav?raw=true", 'rb'))
