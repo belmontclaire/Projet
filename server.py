@@ -8,6 +8,7 @@ import pickle
 import pandas as pd
 import numpy as np
 import uvicorn
+from waitress import serve
 app = Flask(__name__)
 
 loaded_model = pickle.load(open("https://github.com/belmontclaire/Test/blob/main/finalized_model.sav?raw=true", 'rb'))
@@ -29,6 +30,7 @@ def credit(id_client):
 
 #lancement de l'application
 if __name__ == "__main__":
-    uvicorn.run(app, host='127.0.0.1', port=5000)
-    app.run(debug=True)
+    #uvicorn.run(app, host='127.0.0.1', port=5000)
+    #app.run(debug=True)
+    serve(app, host="127.0.0.1", port=5000)
 
