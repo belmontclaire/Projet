@@ -11,6 +11,8 @@ import uvicorn
 #from waitress import serve
 app = Flask(__name__)
 
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://ohnuukntxotyni:cad8f6f371db393af27e81e31a934f6ec58d55d18e45b61da86a1556a11e8078@ec2-63-32-248-14.eu-west-1.compute.amazonaws.com:5432/dccm5mjjtl5nsq'
+
 loaded_model = pickle.load(open("finalized_model.sav", 'rb'))
 
 df = pd.read_csv("https://raw.githubusercontent.com/belmontclaire/Test/main/DataTestSample.csv", header = 0)
