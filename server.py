@@ -31,5 +31,5 @@ def credit(id_client):
 #lancement de l'application
 if __name__ == "__main__":
     #uvicorn.run(app, host='10.0.2.2', port=8080)
-    app.run(host='10.0.2.2', port=8080, debug=True)
+    app.run(host='52.49.176.128', port=24737, debug=True)
     #serve(app, host="10.0.2.2", port=8080)
