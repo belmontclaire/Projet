@@ -55,7 +55,7 @@ placeholder = st.empty()
 
 # dataframe filter
 
-API_url = "http://10.0.2.2:8080/api/" + str(client_filter)
+API_url = "http://52.49.176.128:24737/api/" + str(client_filter)
 
 json_url = urlopen(API_url)
 
