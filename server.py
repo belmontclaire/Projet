@@ -10,8 +10,6 @@ import uvicorn
 #from waitress import serve
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://ohnuukntxotyni:cad8f6f371db393af27e81e31a934f6ec58d55d18e45b61da86a1556a11e8078@ec2-63-32-248-14.eu-west-1.compute.amazonaws.com:5432/dccm5mjjtl5nsq'
-
 loaded_model = pickle.load(open("finalized_model.sav", 'rb'))
 
 df = pd.read_csv("https://raw.githubusercontent.com/belmontclaire/Test/main/DataTestSample.csv", header = 0)
@@ -34,6 +32,5 @@ if __name__ == "__main__":
     #uvicorn.run(app, host='10.0.2.2', port=8080)
     #app.run(host='52.49.176.128', port=24737, debug=True)
     #serve(app, host="10.0.2.2", port=8080)
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port)
+    app.run(host='3.250.252.133', port=5000)
     #app.run()
