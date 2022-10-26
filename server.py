@@ -32,5 +32,5 @@ if __name__ == "__main__":
     #uvicorn.run(app, host='10.0.2.2', port=8080)
     #app.run(host='52.49.176.128', port=24737, debug=True)
     #serve(app, host="10.0.2.2", port=8080)
-    app.run(host='3.250.252.133', port=5000)
+    app.run(host='k8hkp7xaarcy0a:2n9cq9vf2kojrqfic9knx57n2ztw@eu-west-static-05.quotaguard.com', port=9293)
     #app.run()
