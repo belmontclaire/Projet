@@ -55,7 +55,7 @@ placeholder = st.empty()
 
 # dataframe filter
 
-API_url = "http://k8hkp7xaarcy0a:2n9cq9vf2kojrqfic9knx57n2ztw@eu-west-static-05.quotaguard.com:9293/api/" + str(client_filter)
+API_url = "https://credit-predict-flask-app.herokuapp.com/api/api/" + str(client_filter)
 
 json_url = urlopen(API_url)
 
