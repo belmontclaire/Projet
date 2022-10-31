@@ -4,7 +4,6 @@ import pickle
 import pandas as pd
 import numpy as np
 import uvicorn
-#from waitress import serve
 app = Flask(__name__)
 
 loaded_model = pickle.load(open("finalized_model.sav", 'rb'))
