@@ -1,6 +1,3 @@
-##########################################################
-# to run: FLASK_APP=server.py flask run
-##########################################################
 import json
 from flask import Flask, request, jsonify  
 import pickle
@@ -12,7 +9,7 @@ app = Flask(__name__)
 
 loaded_model = pickle.load(open("finalized_model.sav", 'rb'))
 
-df = pd.read_csv("https://raw.githubusercontent.com/belmontclaire/Test/main/DataTestSample.csv", header = 0)
+df = pd.read_csv("https://raw.githubusercontent.com/belmontclaire/Projet/main/DataTestSample.csv", header = 0)
 
 @app.route('/api/<int:id_client>')
 def credit(id_client):
@@ -29,8 +26,4 @@ def credit(id_client):
 
 #lancement de l'application
 if __name__ == "__main__":
-    #uvicorn.run(app, host='10.0.2.2', port=8080)
-    #app.run(host='52.49.176.128', port=24737, debug=True)
-    #serve(app, host="10.0.2.2", port=8080)
-    app.run(host='k8hkp7xaarcy0a:2n9cq9vf2kojrqfic9knx57n2ztw@eu-west-static-05.quotaguard.com', port=9293)
-    #app.run()
+    app.run()
