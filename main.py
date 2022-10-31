@@ -1,6 +1,3 @@
-##########################################################
-# to run: streamlit run main.py
-##########################################################
 import plotly.express as px
 import numpy as np 
 import streamlit as st
@@ -28,7 +25,7 @@ image = Image.open('shap.png')
 @st.cache  # No need for TTL this time. It's static data :)
 def get_data():
 	return pd.read_csv(
-            "https://raw.githubusercontent.com/belmontclaire/Test/main/DataTestSample.csv", header = 0
+            "https://raw.githubusercontent.com/belmontclaire/Projet/main/DataTestSample.csv", header = 0
             )
 @st.cache(allow_output_mutation=True)
 def get_model():
